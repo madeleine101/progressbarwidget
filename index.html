@@ -1,134 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Montserrat:900">
-    <title>Document</title>
-    <style>
-
-body{
-    background-color: white;
-}
-  
-#timer {
-  color: #eeeeee;
-  text-align: center;
-  text-transform: uppercase;
-  font-family: 'Lato', sans-serif;
-  font-size: .7em;
-  letter-spacing: 5px;
-}
-
-.days, .hours, .minutes, .seconds {
-  display: inline-block;
-  padding: 20px;
-  width: 100px;
-  border-radius: 5px;
-}
-
-.days {
-  background: #EF2F3C;
-}
-
-.hours {
-  background: #eeeeee;
-  color: #183059;
-}
-
-.minutes {
-  background: #276FBF;
-}
-
-.seconds {
-  background: #F0A202;
-}
-
-.numbers {
-  font-family: 'Montserrat', sans-serif;
-  color:  #183059;
-  font-size: 4em;
-  text-align: center;
-}
-
-.white {
-  position: absolute;
-  background:  #eeeeee;
-  height: 85px;
-  width: 75px;
-  left: 30%;
-  top: 2%;
-}
-
-.red {
-  position: absolute;
-  background:  #EF2F3C;
-  left: 18%;
-  top: 9%;
-  height: 65px;
-  width: 70px;
- 
-}
-
-.blue {
-  position: absolute;
-  background:  #276FBF;
-  height: 80px;
-  width: 80px;
-  left: 60%;
-  top: 5%;
-
-
-}
-
-
-    </style>
-</head>
-<body>
-    
-<div id="timer">
-
-    <div class="days"> 
-        <div id="days" class="numbers "> </div>days</div> 
-      <div class="hours"> 
-        <div  id="hours" class="numbers"> </div>hours</div> 
-      <div class="minutes"> 
-        <div  id="minutes" class="numbers"> </div>minutes</div> 
-      <div   class="seconds"> 
-        <div id="seconds" class="numbers"> </div>seconds</div> 
-      </div>
-
+<div class="progress" style="border-radius: 10px; border: 1px solid #000">
+  <div id="progress-bar"  style=" border-radius:10px ; background-color: #2E86C1; height: 10px; width: 0%"></div>
 </div>
+<div id="countdown"></div>
 
-</body>
-<script>
-    const year = new Date().getFullYear();
-const myDate = new Date('Oct 15, 2024 00:00:00');
-console.log(myDate);
+<script type="text/javascript">
+  function getDaysRemaining(endtime){
+    var t = Date.parse(endtime) - Date.parse(new Date());
+    var days = Math.floor( t/(1000*60*60*24) );
+    return days;
+  }
+  function getTimeSince(starttime){
+    var t = Date.parse(new Date()) - Date.parse(starttime);
+    var days = Math.floor( t/(1000*60*60*24) );
+    var weeks = Math.floor( days/7 );
+    var daysOfWeek = days % 7;
+    return {
+      'weeks': weeks,
+      'days': daysOfWeek
+    };
+  }
 
-// countdown
-let timer = setInterval(function() {
+  function humaniseSince(weeks, days) {
+    var text = weeks.toString();
+    //if (days > 0) text = text.concat('', days.toString());
+    text = text.concat(' weeks done');
+    return text;
+  }
 
-  // get today's date
-  const today = new Date().getTime();
+  function getPercentage(starttime, endtime) {
+    startDate = Date.parse(starttime);
+    endDate = Date.parse(endtime);
 
-  // get the difference
-  const diff = myDate - today;
+    diff = endDate - startDate;
+    totalDays = Math.floor( diff/(1000*60*60*24) );
 
-  // math
-  let days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  let hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  let seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    var progressDiff = Date.parse(new Date()) - Date.parse(starttime);
+    var progressDays = Math.floor( progressDiff/(1000*60*60*24) );
 
-  // display
-  document.getElementById("days").innerHTML=days
-  document.getElementById("hours").innerHTML=hours
-  document.getElementById("minutes").innerHTML=minutes
-  document.getElementById("seconds").innerHTML=seconds
+    decimal = progressDays/totalDays;
 
+    percentage = Math.floor(decimal * 100);
+    return percentage
+  }
 
+  var startDate = '2022-09-26';
+  var endDate = '2022-12-16';
 
-}, 1);
+  var timeGone = getTimeSince(startDate);
+  var daysLeft = getDaysRemaining(endDate);
+  var sinceText = humaniseSince(timeGone['weeks'], timeGone['days'])
+  var percentComplete = getPercentage(startDate, endDate);
+
+  document.getElementById('progress-bar').style.width = percentComplete.toString() + '%';
+
+  var countdown = document.getElementById('countdown');
+  countdown.innerHTML = sinceText + ',   ' + daysLeft.toString() + '  days left';
 </script>
-</html>
