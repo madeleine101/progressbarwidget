@@ -46,8 +46,8 @@
     return percentage
   }
 
-  var startDate = '2024-04-02';
-  var endDate = '2024-22-03';
+  var startDate = '2024-02-04';
+  var endDate = '2024-03-24';
 
   var timeGone = getTimeSince(startDate);
   var daysLeft = getDaysRemaining(endDate);
@@ -57,6 +57,6 @@
   document.getElementById('progress-bar').style.width = percentComplete.toString() + '%';
 
   var countdown = document.getElementById('countdown');
-  countdown.innerHTML = sinceText + ',   ' + daysLeft.toString() + '  days left';
+  countdown.innerHTML = sinceText + ',   ' + daysLeft.toString() + '  days left', + daysLeft;
 </script>
 </html>
